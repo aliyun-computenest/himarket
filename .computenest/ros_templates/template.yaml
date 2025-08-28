@@ -130,39 +130,20 @@ Parameters:
       en: Instance Type
       zh-cn: 实例类型
     AssociationProperty: ALIYUN::ECS::Instance::InstanceType
+    AllowedValues:
+      - ecs.u1-c1m4.large
+      - ecs.u1-c1m1.xlarge
+      - ecs.u1-c1m2.xlarge
+      - ecs.u1-c1m4.xlarge
+      - ecs.u1-c1m1.2xlarge
+      - ecs.u1-c1m2.3xlarge
+      - ecs.u1-c1m1.4xlarge
+      - ecs.e-c1m2.xlarge
+      - ecs.e-c1m4.large
+      - ecs.u1-c1m2.large
     AssociationPropertyMetadata:
       InstanceChargeType: ${PayType}
-      Constraints:
-        InstanceTypeFamily:
-          - ecs.u1
-          - ecs.e
-  InstancePassword:
-    NoEcho: true
-    Type: String
-    Description:
-      en: Server login password, Length 8-30, must contain three(Capital letters, lowercase letters, numbers, ()`~!@#$%^&*_-+=|{}[]:;'<>,.?/ Special symbol in)
-      zh-cn: 服务器登录密码,长度8-30，必须包含三项（大写字母、小写字母、数字、 ()`~!@#$%^&*_-+=|{}[]:;'<>,.?/ 中的特殊符号）
-    AllowedPattern: '^[a-zA-Z0-9-\(\)\`\~\!\@\#\$\%\^\&\*\_\-\+\=\|\{\}\[\]\:\;\<\>\,\.\?\/]*$'
-    Label:
-      en: Instance Password
-      zh-cn: 实例密码
-    ConstraintDescription:
-      en: Length 8-30, must contain three(Capital letters, lowercase letters, numbers, ()`~!@#$%^&*_-+=|{}[]:;'<>,.?/ Special symbol in)
-      zh-cn: 长度8-30，必须包含三项（大写字母、小写字母、数字、 ()`~!@#$%^&*_-+=|{}[]:;'<>,.?/ 中的特殊符号）
-    MinLength: 8
-    MaxLength: 30
-    AssociationProperty: ALIYUN::ECS::Instance::Password
-  ZoneId:
-    Type: String
-    Label:
-      en: Zone ID
-      zh-cn: 可用区ID
-    AssociationProperty: ALIYUN::ECS::Instance::ZoneId
-    AssociationPropertyMetadata:
-      DefaultValueStrategy: random
-      InstanceChargeType: ${PayType}
-      SystemDiskCategory: cloud_essd
-      InstanceType: ${EcsInstanceType}
+    Default: ecs.u1-c1m2.large
   VpcId:
     Type: String
     Label:
@@ -201,7 +182,31 @@ Parameters:
           Fn::Equals:
             - ExistingVPC
             - ${VpcOption}
+  ZoneId:
+    Type: String
+    Label:
+      en: Zone ID
+      zh-cn: 可用区ID
+    AssociationProperty: ALIYUN::ECS::Instance::ZoneId
+    AssociationPropertyMetadata:
+      DefaultValueStrategy: random
+      InstanceChargeType: ${PayType}
+      SystemDiskCategory: cloud_essd
+      InstanceType: ${EcsInstanceType}
 Resources:
+  RandomPassword:
+    Type: ALIYUN::RandomString
+    Properties:
+      length: 11
+      character_classes:
+        - class: "lowercase"
+          min: 4
+        - class: "uppercase"
+          min: 4
+        - class: "digits"
+          min: 2
+      character_sequences:
+        - sequence: "!@#$^*-+="
   # 新建vpc
   EcsVpc:
     Type: ALIYUN::ECS::VPC
@@ -235,17 +240,7 @@ Resources:
           - Ref: EcsVpc
           - Ref: VpcId
       SecurityGroupIngress:
-        - PortRange: 3306/3306
-          Priority: 1
-          SourceCidrIp: 0.0.0.0/0
-          IpProtocol: tcp
-          NicType: internet
         - PortRange: 5174/5174
-          Priority: 1
-          SourceCidrIp: 0.0.0.0/0
-          IpProtocol: tcp
-          NicType: internet
-        - PortRange: 8080/8080
           Priority: 1
           SourceCidrIp: 0.0.0.0/0
           IpProtocol: tcp
@@ -281,7 +276,9 @@ Resources:
         Ref: SecurityGroup
       ImageId: ecs_image_himarket
       Password:
-        Ref: InstancePassword
+        Fn::GetAtt:
+          - RandomPassword
+          - value
       InstanceType:
         Ref: EcsInstanceType
       SystemDiskCategory: cloud_essd
@@ -334,8 +331,8 @@ Resources:
     Properties:
       InstanceIds:
         Fn::GetAtt:
-        - InstanceGroup
-        - InstanceIds
+          - InstanceGroup
+          - InstanceIds
       Type: RunShellScript
       Sync: true
       Timeout: 3600
@@ -436,7 +433,7 @@ Resources:
 
                 chmod +x /usr/local/bin/check-container-status
                 systemctl enable himarket
-                
+            
             }
 
             function create_custom_parameter_file() {
@@ -466,37 +463,11 @@ Resources:
               Ref: ALIYUN::Region
             CurTime:
               Ref: CurTime
-Outputs: 
-  mysql_address:
-    Description:
-      en: mysql address.
-      zh-cn: mysql 访问页面。
-    Value:
-      Fn::Sub:
-        - http://${ServerAddress}:3306
-        - ServerAddress:
-            Fn::Select:
-              - 0
-              - Fn::GetAtt:
-                  - InstanceGroup
-                  - PublicIps
-  api-portal-server_address:
-    Description:
-      en: api-portal-server address.
-      zh-cn: api-portal-server 访问页面。
-    Value:
-      Fn::Sub:
-        - http://${ServerAddress}:8080
-        - ServerAddress:
-            Fn::Select:
-              - 0
-              - Fn::GetAtt:
-                  - InstanceGroup
-                  - PublicIps
+Outputs:
   api-portal-admin_address:
-    Description:
+    Label:
       en: api-portal-admin address.
-      zh-cn: api-portal-admin 访问页面。
+      zh-cn: 管理员访问页面。
     Value:
       Fn::Sub:
         - http://${ServerAddress}:5174
@@ -507,9 +478,9 @@ Outputs:
                   - InstanceGroup
                   - PublicIps
   api-portal-frontend_address:
-    Description:
+    Label:
       en: api-portal-frontend address.
-      zh-cn: api-portal-frontend 访问页面。
+      zh-cn: 用户使用页面。
     Value:
       Fn::Sub:
         - http://${ServerAddress}:80
