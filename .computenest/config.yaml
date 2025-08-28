@@ -17,11 +17,6 @@ Service:
         Type: Custom
         Parameters:
         - EcsInstanceType
-      - Name: 变更ECS实例密码
-        Description: 变更ECS实例密码
-        Type: Custom
-        Parameters:
-        - InstancePassword
   UpgradeMetadata:
     Description: 升级
     SupportUpgradeFromVersions: []
@@ -49,14 +44,12 @@ Service:
       - ap-southeast-1
   ServiceType: private
   ServiceInfo:
-    # 英文版可以再配置Locale为en-US的服务信息
-  - Locale: zh-CN
-    Name: AI开放平台
-    ShortDescription: 企业可以基于开放平台构建自己的 LLM、MCP 门户等，例如构建像 OpenRouter 这样的模型聚合平台，或者像 Higress
-      MCP Marketplace 这样的 MCP 市场。
-    Image: 
-      https://service-info-public.oss-cn-hangzhou.aliyuncs.com/1853370294850618/service-image/bfd30cc4-e959-4093-b5cb-77a05058b911.png
-    Softwares: []
+    - Agreements: []
+      Image: resources/icons/service_logo_zh-CN.png
+      Locale: zh-CN
+      Name: HiMarket AI 开放平台
+      ShortDescription: 企业可以基于开放平台构建自己的 LLM、MCP 门户等，例如构建像 OpenRouter 这样的模型聚合平台，或者像 Higress MCP Marketplace 这样的 MCP 市场。
+      Softwares: []
 Artifact:
   EcsImage:
     ArtifactType: EcsImage
