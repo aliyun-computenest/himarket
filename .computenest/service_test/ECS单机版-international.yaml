@@ -1,0 +1,9 @@
+templateName: ECS单机版
+regionId: ap-southeast-1
+parameters:
+  VpcCidrBlock: "192.168.0.0/16"
+  VpcOption: "NewVPC"
+  PayType: "PostPaid"
+  EcsInstanceType: "ecs.u1-c1m2.large"
+  VSwitchCidrBlock: "192.168.1.0/24"
+caseId: stc-b33818a666c74318ab66

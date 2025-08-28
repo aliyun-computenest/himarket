@@ -44,12 +44,13 @@ Service:
       - ap-southeast-1
   ServiceType: private
   ServiceInfo:
-    - Agreements: []
-      Image: resources/icons/service_logo_zh-CN.png
-      Locale: zh-CN
-      Name: HiMarket AI 开放平台
-      ShortDescription: 企业可以基于开放平台构建自己的 LLM、MCP 门户等，例如构建像 OpenRouter 这样的模型聚合平台，或者像 Higress MCP Marketplace 这样的 MCP 市场。
-      Softwares: []
+  - Locale: zh-CN
+    Name: HiMarket AI 开放平台
+    ShortDescription: "企业可以基于开放平台构建自己的 LLM、MCP 门户等，例如构建像 OpenRouter 这样的模型聚合平台，或者像
+      Higress MCP Marketplace 这样的 MCP 市场。\n"
+    Image: 
+      https://service-info-public.oss-cn-hangzhou.aliyuncs.com/5141674772595072/service-image/1c9f9d38-0eb0-451b-b87e-246541ba2664.png
+    Softwares: []
 Artifact:
   EcsImage:
     ArtifactType: EcsImage

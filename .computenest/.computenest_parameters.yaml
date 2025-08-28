@@ -1,12 +1,1 @@
-RuntimeType: Container
-ServiceType: private
-ArtifactSourceType: DockerCompose
-ServiceBuildRegion: ap-southeast-1
-RepoName: aliyun-computenest/himarket
-DockerComposeEnvPath: .env
-RegionId: cn-hangzhou
-CustomParameters: ''
-DockerComposeYamlPath: docker-compose.yaml
-Owner: LYH-RAIN
-Branch: main
-Platform: github
+{"RepoName":"aliyun-computenest/himarket","RegionId":"ap-southeast-1","Owner":"LYH-RAIN","Branch":"main","Platform":"github"}
