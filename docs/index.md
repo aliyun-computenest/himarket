@@ -1,6 +1,6 @@
 本指南帮助用户快速在计算巢使用HiMarket来构建私有化MCP市场，助力企业构建 AI 中台。
 
-[https://github.com/higress-group/himarket](https://github.com/higress-group/himarket)
+Github地址：[https://github.com/higress-group/himarket](https://github.com/higress-group/himarket)
 
 ## 一、通过计算巢一键部署 HiMarket
 ### HiMarket项目结构说明
@@ -9,7 +9,7 @@ HiMarket 目前涉及到portal-bootstrap（Java 后端）、api-portal-admin（�
 ### 一键部署HiMarket
 通过[计算巢控制台创建HiMarket AI开放平台任务](https://computenest.console.aliyun.com/service/instance/create/cn-hangzhou?type=user&ServiceId=service-a9acee41142746928283&ServiceVersion=beta)可以一键拉起整套AI开放平台环境。
 
-![](https://intranetproxy.alipay.com/skylark/lark/0/2025/png/198743/1756301233627-e4f71bd8-46cc-468c-96a2-ee359836878b.png)
+
 
 选择目标地域，选择实例类型，由于本方案包含了三个应用以及一个mysql数据库，推荐使用2C4G以上实例配置；配置计费方式、可用区以及网络配置后，点击确定订单，并且立即创建AI开放平台。![](https://intranetproxy.alipay.com/skylark/lark/0/2025/png/198743/1756301119586-64abc28c-5e27-4faf-bb27-9248476b9d2a.png)
 
@@ -21,35 +21,62 @@ HiMarket 目前涉及到portal-bootstrap（Java 后端）、api-portal-admin（�
 
 部署完成后，点击实例即可获取AI开放平台的前台与后台的访问链接。
 
+![](https://intranetproxy.alipay.com/skylark/lark/0/2025/png/198743/1756352169584-d5c9cdb3-c411-465b-905c-cd268d8e7fad.png)
+
 ### 替换Mysql实例（可选）
 通过计算巢一键部署是通过ECS方式部署三个项目以及mysql实例，用户可以快速体验HiMarket的MCP中台能力，如果用户有进一步生产使用的诉求，可以将 Mysql 切换至 RDS 实例高可用版本，并且只需要在 portal-bootstrap 服务中通过环境变量方式替换 DB_HOST 配置。
 
 ## 二、HiMarket 后台管理
 ### 注册管理员
-访问 `http://localhost:5174`，首次访问注册一个管理员账号。
+访问管理员访问页面 `http://47.xx.xx.xx:5174`，首次访问注册一个管理员账号。
 
 ![](https://intranetproxy.alipay.com/skylark/lark/0/2025/png/156306/1756119821010-918f90e0-8975-4e4b-9c49-fed73bd5da3e.png)
 
 ### 导入 AI 网关实例
-选择【实例管理】-【网关实例】-【导入网关实例】-【AI 网关】，需要准备好子账号的AK/SK，然后选择对应Region的实例，并导入 AI 网关实例，以xxx为例。
+选择【实例管理】-【网关实例】-【导入网关实例】-【AI 网关】，需要准备好子账号的AK/SK，然后选择对应Region的实例，并导入 AI 网关实例，以gw-xxx为例。
 
-![](https://intranetproxy.alipay.com/skylark/lark/0/2025/png/156306/1756120367063-e2c9d5e5-9bad-4193-a681-c59145839c54.png)
+![](https://intranetproxy.alipay.com/skylark/lark/0/2025/png/198743/1756352419273-dce17653-6df0-4950-8a51-b4f060d163c7.png)
 
-其中涉及到子账号AK/SK的申请，为了避免泄漏风险，需要选择最小权限：详见：[集成AI/API网关所需的最小RAM权限](https://aliyuque.antfin.com/ah5vgb/kg7h1z/oc8wb6f5mpa9xssd?singleDoc#)
+![](https://intranetproxy.alipay.com/skylark/lark/0/2025/png/198743/1756352393408-98066e45-e7a1-43d0-bbe9-a8c83129677b.png)
+
+其中涉及到子账号AK/SK的申请，为了避免泄漏风险，需要创建子账号并选择最小权限，相关权限梳理如下：
+
++ APIG 只读权限：APIGReadOnlyAccess
++ <font style="color:rgb(51, 51, 51);background-color:rgb(250, 250, 250);">计量/日志/SLS只读权限：</font>AliyunLogReadOnlyAccess
++ APIG 消费者/策略/插件操作相关写权限
+
+```json
+{
+  "Version": "1",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "apig:*Consumer*",
+        "apig:*Policy*",
+        "apig:*Plugin*"
+      ],
+      "Resource": "*"
+    }
+  ]
+}
+```
+
+使用AK/SK需要注意AK/SK泄漏风险。
 
 ### 创建 Portal 门户
 选择【Portal】-【创建 Portal】，创建一个名为 himarket-demo 的门户。
 
-![](https://intranetproxy.alipay.com/skylark/lark/0/2025/png/156306/1756120440508-7d2960b3-9439-43b9-91e6-de371e5ee76e.png)
+![](https://intranetproxy.alipay.com/skylark/lark/0/2025/png/198743/1756352736170-4cc49554-c008-4dd5-9732-7911187418c4.png)
 
 点击门户卡片，进入门户配置，其他配置保留默认选项即可，在 【Setting】-【域名管理】-【绑定域名】中，绑定一个 localhost 域名，用于开发自测。其他菜单在快速入门中可以先不用关注，这里简单介绍下他们的功能：
 
 + Published API Products。管理门户中发布的 API Product。
 + Developers。管理门户的 Developer，以及 Developer 关联的 Consumer。
 + Settings。
-    - 配置门户的基本信息。
-    - 控制门户中 Developer 的注册审批是否自动通过、API Product 订阅是否自动通过。
-    - 门户支持的三方登录。支持标准的 OIDC 配置，如 Aliyun、Google、Github 等。
+  - 配置门户的基本信息。
+  - 控制门户中 Developer 的注册审批是否自动通过、API Product 订阅是否自动通过。
+  - 门户支持的三方登录。支持标准的 OIDC 配置，如 Aliyun、Google、Github 等。
 
 ### 创建 API Product
 选择【API Products】-【创建 API Product】，创建一个 demo-api 的 API Product。
@@ -59,9 +86,9 @@ HiMarket 目前涉及到portal-bootstrap（Java 后端）、api-portal-admin（�
 API Product 的初始状态为“待配置”，需要进行 Link API、发布到门户等操作。
 
 ### 关联 API
-![](https://intranetproxy.alipay.com/skylark/lark/0/2025/png/156306/1756135284300-92fbfc3d-4927-42d2-91eb-ef586a2ae083.png)
+![](https://intranetproxy.alipay.com/skylark/lark/0/2025/png/198743/1756352703144-498a0db7-bf9e-44fb-b408-b4c4c8b6cb37.png)
 
-关联一个网关的 MCP 服务，数据源来自于 AI 网关 MCP 服务管理。API Config 也会自动同步 Higress 中的配置。
+关联一个网关的 MCP 服务，数据源来自于 AI 网关 MCP 服务管理。API Config 也会自动同步 AI 网关中的配置。
 
 ### Usage Guide
 ![](https://intranetproxy.alipay.com/skylark/lark/0/2025/png/156306/1756135522434-60d162f9-3007-487d-a19b-36fc323e9bd3.png)
@@ -76,9 +103,7 @@ API Product 的初始状态为“待配置”，需要进行 Link API、发布�
 至此，一个 Higress 的 MCP Server 成功发布到了门户。
 
 ## 三、HiMarket 门户
-门户会有一个默认分配的域名，但域名解析需要用户自己完成，例如自动分配了 portal-68ac4564bdb292ee9261ff4a.api.portal.local 域名，需要将其解析到 api-portal-frontend 对应的 IP 上。
-
-由于刚刚已经额外配置了 localhost 域名给测试门户，所以也可以直接通过 localhost:5173 访问前台。
+门户会有一个默认分配的域名，但域名解析需要用户自己完成，例如自动分配了 portal-68ac4564bdb292ee9261ff4a.api.portal.local 域名，需要将其解析到 api-portal-frontend 对应的 IP 上（即计算巢中部署的**<font style="color:rgb(51, 51, 51) !important;">用户使用页面</font>**地址IP`47.xx.xx.xx`），管理员可以在后台【Portal详情】-【设置】-【域名管理】中管理当前前台Portal的域名。
 
 ### 注册 Developer 开发者
 ![](https://intranetproxy.alipay.com/skylark/lark/0/2025/png/156306/1756136341614-78e70a99-6165-4ef0-9c7d-839538f32651.png)
