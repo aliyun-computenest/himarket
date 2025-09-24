@@ -15,7 +15,7 @@ services:
     restart: always
 
   api-portal-server:
-    image: opensource-registry.cn-hangzhou.cr.aliyuncs.com/higress-group/api-portal-server:1.0.0
+    image: opensource-registry.cn-hangzhou.cr.aliyuncs.com/higress-group/api-portal-server:latest
     container_name: api-portal-server
     environment:
       - DB_HOST=mysql
@@ -30,7 +30,7 @@ services:
     restart: always
 
   api-portal-admin:
-    image: opensource-registry.cn-hangzhou.cr.aliyuncs.com/higress-group/api-portal-admin:1.0.0
+    image: opensource-registry.cn-hangzhou.cr.aliyuncs.com/higress-group/api-portal-admin:latest
     container_name: api-portal-admin
     environment:
       - API_PORTAL_SERVER=http://api-portal-server:8080
@@ -41,7 +41,7 @@ services:
     restart: always
 
   api-portal-frontend:
-    image: opensource-registry.cn-hangzhou.cr.aliyuncs.com/higress-group/api-portal-frontend:1.0.0
+    image: opensource-registry.cn-hangzhou.cr.aliyuncs.com/higress-group/api-portal-frontend:latest
     container_name: api-portal-frontend
     environment:
       - API_PORTAL_SERVER=http://api-portal-server:8080
