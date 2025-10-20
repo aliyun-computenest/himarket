@@ -1,7 +1,7 @@
 version: '3'
 services:
   mysql:
-    image: mysql/mysql-server:8.0
+    image: opensource-registry.cn-hangzhou.cr.aliyuncs.com/higress-group/mysql:1.0.0
     container_name: mysql
     environment:
       - MYSQL_ROOT_PASSWORD=123456
@@ -14,9 +14,9 @@ services:
       - ./mysql/data:/var/lib/mysql
     restart: always
 
-  api-portal-server:
+  himarket-server:
     image: opensource-registry.cn-hangzhou.cr.aliyuncs.com/higress-group/himarket-server:latest
-    container_name: api-portal-server
+    container_name: himarket-server
     environment:
       - DB_HOST=mysql
       - DB_PORT=3306
@@ -29,24 +29,24 @@ services:
       - mysql
     restart: always
 
-  api-portal-admin:
+  himarket-admin:
     image: opensource-registry.cn-hangzhou.cr.aliyuncs.com/higress-group/himarket-admin:latest
-    container_name: api-portal-admin
+    container_name: himarket-admin
     environment:
-      - API_PORTAL_SERVER=http://api-portal-server:8080
+      - HIMARKET_SERVER=http://himarket-server:8080
     ports:
       - "5174:8000"
     depends_on:
-      - api-portal-server
+      - himarket-server
     restart: always
 
-  api-portal-frontend:
+  himarket-frontend:
     image: opensource-registry.cn-hangzhou.cr.aliyuncs.com/higress-group/himarket-frontend:latest
-    container_name: api-portal-frontend
+    container_name: himarket-frontend
     environment:
-      - API_PORTAL_SERVER=http://api-portal-server:8080
+      - HIMARKET_SERVER=http://himarket-server:8080
     ports:
-      - "80:8000"
+      - "5173:8000"
     depends_on:
-      - api-portal-server
+      - himarket-server
     restart: always
