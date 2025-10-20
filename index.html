@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="计算巢是阿里云开放给企业应用服务商的服务管理平台。服务商能够在计算巢上发布私有化部署服务，为其客户提供云上软件一键部署的能力；同时也支持全托管模式的服务，赋能服务商托管其客户资源。">
+  <title>Home - Aliyun 计算巢 x Demo</title>
+
+  <link rel="shortcut icon" href="img/favicon.ico">
+
+  <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css">
+  <link rel="stylesheet" href="css/theme.css">
+  
+
+  
+
+  
+  
+
+  
+    <script src="search/main.js"></script>
+  
+
+  
+
+  <script src="js/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
+</head>
+
+<body>
+  <div class="container">
+    <div class="nav">
+      <div class="nav-inner">
+        <div class="logo">
+          <img src="./img/logo-2x.png">
+        </div>
+        <div class="nav-list">
+          <ul>
+          
+              <li><a href="#himarket">一、通过计算巢一键部署 HiMarket</a></li>
+              
+                  <li><a href="#himarket_1">HiMarket项目结构说明</a></li>
+                  
+              
+                  <li><a href="#himarket_2">一键部署HiMarket</a></li>
+                  
+              
+                  <li><a href="#mysql">替换Mysql实例（可选）</a></li>
+                  
+              
+          
+              <li><a href="#himarket_3">二、HiMarket 后台管理</a></li>
+              
+                  <li><a href="#_1">注册管理员</a></li>
+                  
+              
+                  <li><a href="#ai">导入 AI 网关实例</a></li>
+                  
+              
+                  <li><a href="#portal">创建 Portal 门户</a></li>
+                  
+              
+                  <li><a href="#api-product">创建 API Product</a></li>
+                  
+              
+                  <li><a href="#api">关联 API</a></li>
+                  
+              
+                  <li><a href="#usage-guide">Usage Guide</a></li>
+                  
+              
+                  <li><a href="#_2">发布到门户</a></li>
+                  
+              
+          
+              <li><a href="#himarket_4">三、HiMarket 门户</a></li>
+              
+                  <li><a href="#developer">注册 Developer 开发者</a></li>
+                  
+              
+                  <li><a href="#consumer">创建 Consumer 消费者</a></li>
+                  
+              
+                  <li><a href="#_3">发起调用</a></li>
+                  
+              
+          
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="content theme-github">
+      
+      <div class="content-inner">        
+        
+        <p>本指南帮助用户快速在计算巢使用HiMarket来构建私有化MCP市场，助力企业构建 AI 中台。</p>
+<p>Github地址：<a href="https://github.com/higress-group/himarket">https://github.com/higress-group/himarket</a></p>
+<h2 id="himarket">一、通过计算巢一键部署 HiMarket</h2>
+<h3 id="himarket_1">HiMarket项目结构说明</h3>
+<p>HiMarket 目前涉及到portal-bootstrap（Java 后端）、api-portal-admin（后台前端） 和 api-portal-frontend （前台前端）三个项目，并且依赖一个Mysql数据库实例。</p>
+<h3 id="himarket_2">一键部署HiMarket</h3>
+<p>通过<a href="https://computenest.console.aliyun.com/service/instance/create/cn-hangzhou?type=user&amp;ServiceId=service-a9acee41142746928283&amp;ServiceVersion=beta">计算巢控制台创建HiMarket AI开放平台任务</a>可以一键拉起整套AI开放平台环境。</p>
+<p>选择目标地域，选择实例类型，由于本方案包含了三个应用以及一个mysql数据库，推荐使用2C4G以上实例配置；配置计费方式、可用区以及网络配置后，点击确定订单，并且立即创建AI开放平台。<img alt="" src="https://intranetproxy.alipay.com/skylark/lark/0/2025/png/198743/1756301119586-64abc28c-5e27-4faf-bb27-9248476b9d2a.png" /></p>
+<p>点击确定后，等待实例创建完成。</p>
+<p>在我的实例中可以看到实例的部署进度</p>
+<p><img alt="" src="https://intranetproxy.alipay.com/skylark/lark/0/2025/png/198743/1756301189851-348e9dd9-7f3e-4540-98f1-45c854c7b20a.png" /></p>
+<p>部署完成后，点击实例即可获取AI开放平台的前台与后台的访问链接。</p>
+<p><img alt="" src="https://intranetproxy.alipay.com/skylark/lark/0/2025/png/198743/1756352169584-d5c9cdb3-c411-465b-905c-cd268d8e7fad.png" /></p>
+<h3 id="mysql">替换Mysql实例（可选）</h3>
+<p>通过计算巢一键部署是通过ECS方式部署三个项目以及mysql实例，用户可以快速体验HiMarket的MCP中台能力，如果用户有进一步生产使用的诉求，可以将 Mysql 切换至 RDS 实例高可用版本，并且只需要在 portal-bootstrap 服务中通过环境变量方式替换 DB_HOST 配置。</p>
+<h2 id="himarket_3">二、HiMarket 后台管理</h2>
+<h3 id="_1">注册管理员</h3>
+<p>访问管理员访问页面 <code>http://47.xx.xx.xx:5174</code>，首次访问注册一个管理员账号。</p>
+<p><img alt="" src="https://intranetproxy.alipay.com/skylark/lark/0/2025/png/156306/1756119821010-918f90e0-8975-4e4b-9c49-fed73bd5da3e.png" /></p>
+<h3 id="ai">导入 AI 网关实例</h3>
+<p>选择【实例管理】-【网关实例】-【导入网关实例】-【AI 网关】，需要准备好子账号的AK/SK，然后选择对应Region的实例，并导入 AI 网关实例，以gw-xxx为例。</p>
+<p><img alt="" src="https://intranetproxy.alipay.com/skylark/lark/0/2025/png/198743/1756352419273-dce17653-6df0-4950-8a51-b4f060d163c7.png" /></p>
+<p><img alt="" src="https://intranetproxy.alipay.com/skylark/lark/0/2025/png/198743/1756352393408-98066e45-e7a1-43d0-bbe9-a8c83129677b.png" /></p>
+<p>其中涉及到子账号AK/SK的申请，为了避免泄漏风险，需要创建子账号并选择最小权限，相关权限梳理如下：</p>
+<ul>
+<li>APIG 只读权限：APIGReadOnlyAccess</li>
+<li><font style="color:rgb(51, 51, 51);background-color:rgb(250, 250, 250);">计量/日志/SLS只读权限：</font>AliyunLogReadOnlyAccess</li>
+<li>APIG 消费者/策略/插件操作相关写权限</li>
+</ul>
+<pre><code class="language-json">{
+  &quot;Version&quot;: &quot;1&quot;,
+  &quot;Statement&quot;: [
+    {
+      &quot;Effect&quot;: &quot;Allow&quot;,
+      &quot;Action&quot;: [
+        &quot;apig:*Consumer*&quot;,
+        &quot;apig:*Policy*&quot;,
+        &quot;apig:*Plugin*&quot;
+      ],
+      &quot;Resource&quot;: &quot;*&quot;
+    }
+  ]
+}
+</code></pre>
+<p>使用AK/SK需要注意AK/SK泄漏风险。</p>
+<h3 id="portal">创建 Portal 门户</h3>
+<p>选择【Portal】-【创建 Portal】，创建一个名为 himarket-demo 的门户。</p>
+<p><img alt="" src="https://intranetproxy.alipay.com/skylark/lark/0/2025/png/198743/1756352736170-4cc49554-c008-4dd5-9732-7911187418c4.png" /></p>
+<p>点击门户卡片，进入门户配置，其他配置保留默认选项即可，在 【Setting】-【域名管理】-【绑定域名】中，绑定一个 localhost 域名，用于开发自测。其他菜单在快速入门中可以先不用关注，这里简单介绍下他们的功能：</p>
+<ul>
+<li>Published API Products。管理门户中发布的 API Product。</li>
+<li>Developers。管理门户的 Developer，以及 Developer 关联的 Consumer。</li>
+<li>Settings。</li>
+<li>配置门户的基本信息。</li>
+<li>控制门户中 Developer 的注册审批是否自动通过、API Product 订阅是否自动通过。</li>
+<li>门户支持的三方登录。支持标准的 OIDC 配置，如 Aliyun、Google、Github 等。</li>
+</ul>
+<h3 id="api-product">创建 API Product</h3>
+<p>选择【API Products】-【创建 API Product】，创建一个 demo-api 的 API Product。</p>
+<p><img alt="" src="https://intranetproxy.alipay.com/skylark/lark/0/2025/png/156306/1756120817284-7d572a58-15b2-41ca-8798-f8514dd48fec.png" /></p>
+<p>API Product 的初始状态为“待配置”，需要进行 Link API、发布到门户等操作。</p>
+<h3 id="api">关联 API</h3>
+<p><img alt="" src="https://intranetproxy.alipay.com/skylark/lark/0/2025/png/198743/1756352703144-498a0db7-bf9e-44fb-b408-b4c4c8b6cb37.png" /></p>
+<p>关联一个网关的 MCP 服务，数据源来自于 AI 网关 MCP 服务管理。API Config 也会自动同步 AI 网关中的配置。</p>
+<h3 id="usage-guide">Usage Guide</h3>
+<p><img alt="" src="https://intranetproxy.alipay.com/skylark/lark/0/2025/png/156306/1756135522434-60d162f9-3007-487d-a19b-36fc323e9bd3.png" /></p>
+<p>可以在使用指南中编辑自定义的文档信息。</p>
+<h3 id="_2">发布到门户</h3>
+<p>在 API Product 准备就绪后，可以选择发布到指定的门户。</p>
+<p><img alt="" src="https://intranetproxy.alipay.com/skylark/lark/0/2025/png/156306/1756135616759-69d1a672-cadc-40af-b329-0e1c712569bc.png" /></p>
+<p>至此，一个 Higress 的 MCP Server 成功发布到了门户。</p>
+<h2 id="himarket_4">三、HiMarket 门户</h2>
+<p>门户会有一个默认分配的域名，但域名解析需要用户自己完成，例如自动分配了 portal-68ac4564bdb292ee9261ff4a.api.portal.local 域名，需要将其解析到 api-portal-frontend 对应的 IP 上（即计算巢中部署的<strong><font style="color:rgb(51, 51, 51) !important;">用户使用页面</font></strong>地址IP<code>47.xx.xx.xx</code>），管理员可以在后台【Portal详情】-【设置】-【域名管理】中管理当前前台Portal的域名。</p>
+<h3 id="developer">注册 Developer 开发者</h3>
+<p><img alt="" src="https://intranetproxy.alipay.com/skylark/lark/0/2025/png/156306/1756136341614-78e70a99-6165-4ef0-9c7d-839538f32651.png" /></p>
+<p>由于门户之前在设置中未打开自动审批，注册账号后需要等待管理员后台审批开发者通过，审批通过后，方可使用注册的账号在前台登录。</p>
+<p><img alt="" src="https://intranetproxy.alipay.com/skylark/lark/0/2025/png/156306/1756136953577-e7259989-49b7-4fb3-9ac3-023453fcb303.png" /></p>
+<p>访问 MCP 门户可以看到刚刚发布的 MCP Server</p>
+<p><img alt="" src="https://intranetproxy.alipay.com/skylark/lark/0/2025/png/156306/1756137076017-354e06c7-62e2-458b-bc08-c958f3b0d00d.png" /> <img alt="" src="https://intranetproxy.alipay.com/skylark/lark/0/2025/png/156306/1756137117244-4ffdaabe-3459-43df-a79f-a3a74fcb8641.png" /></p>
+<h3 id="consumer">创建 Consumer 消费者</h3>
+<p>在 AI 开放平台的设计中，消费者 Developer 代表一般的用户身份，而用户需要持有对应的凭证才可以申请订阅 API Product，而凭证这一概念，在 AI 开放平台中称之为 Consumer 消费者，Developer 与 Consumer 是一对多的关联。</p>
+<p><img alt="" src="https://intranetproxy.alipay.com/skylark/lark/0/2025/png/156306/1756137408652-ececcf32-15a6-4b8d-a76a-6a8c6795e49a.png" /></p>
+<p>创建消费者之后，即可申请 API Product 的订阅</p>
+<p><img alt="" src="https://intranetproxy.alipay.com/skylark/lark/0/2025/png/156306/1756137466611-a90abc4b-7f39-4427-9443-671ddd24b5de.png" /></p>
+<p>门户的默认配置中，订阅的审批是默认关闭的，即开发者申请后会自动审批通过。</p>
+<h3 id="_3">发起调用</h3>
+<p>携带消费者的凭证，配置门户中 MCP Server 的连接地址，即可发起对 MCP Server 的调用。 </p>
+        
+      </div>
+
+      <div class="copyrights">© 2009-2022 Aliyun.com 版权所有</div>
+    </div>
+  </div>
+  
+  <!--
+  MkDocs version      : 1.6.1
+  Docs Build Date UTC : 2025-10-20 08:51:16.300589+00:00
+  -->
+</body>
+</html>
